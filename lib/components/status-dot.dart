@@ -4,7 +4,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class StatusDot extends StatefulWidget {
   MaterialColor color;
 
-  StatusDot(this.color, {Key key}) : super(key: key);
+  StatusDot(this.color, {required Key key}) : super(key: key);
 
   @override
   _StatusDotState createState() => _StatusDotState();

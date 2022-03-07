@@ -4,7 +4,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class HomePageGrid extends StatefulWidget {
   var channel;
 
-  HomePageGrid(this.channel, {Key key}) : super(key: key);
+  HomePageGrid(this.channel, {required Key key}) : super(key: key);
 
   @override
   _HomePageGridState createState() => _HomePageGridState();

@@ -3,7 +3,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class HomePageNav extends StatefulWidget {
   const HomePageNav({
-    Key key,
+    required Key key,
   }) : super(key: key);
 
   @override
