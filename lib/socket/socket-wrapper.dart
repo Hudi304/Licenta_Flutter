@@ -9,56 +9,60 @@ class WebSocketsNotifications {
   WebSocketsNotifications();
 
   IOWebSocketChannel? _channel;
+
+  WebSocket? socket;
+
   bool isOn = false;
+  bool lostConnection = true;
+  bool tryConnect = false;
+
   final ObserverList<Function> _listeners = ObserverList<Function>();
-
-  // WebSocket? socket;
-  //
-  // WebSocket socket;
-  //
-  // void _onDisconnected() {
-  //   print('Disconnected');
-  //   if (socket != null) {
-  //     socket.close();
-  //   }
-  //   socket = null;
-  //   _tryConnect();
-  // }
-  //
-  // void _tryConnect() {
-  //   WebSocket.connect(url).then((ws) {
-  //     socekt = ws;
-  //     socket.listen(
-  //           (dynamic message) {
-  //         print(message)
-  //       },
-  //       onDone: _onDisconnected,
-  //       onError: (dynamic error) => _onDisconnected(),
-  //     );
-  //     socket.done.then((dynamic _) => _onDisconnected());
-  //   });
-  // }
-
 
   initCommunication() async {
     reset();
     try {
-      _channel = IOWebSocketChannel.connect(_SERVER_ADDRESS);
-      _channel?.innerWebSocket?.pingInterval = const Duration(seconds: 1);
-      int? readySate = _channel?.innerWebSocket?.readyState;
-      print("ready state : " + readySate.toString());
-
-
-      _channel?.stream.listen(
-        _onReceptionOfMessageFromServer,
-        onDone: () => print("disconnected"),
-        onError: (_) => print("onError"),
-      );
-      print("CONNECTED");
+      _tryConnect();
       isOn = true;
     } catch (e) {
       print("FAILED : ");
     }
+  }
+
+  void onDisconnected() {
+    print('Disconnected');
+    if (socket != null) {
+      socket?.close();
+    }
+    socket = null;
+    if (tryConnect == false) {
+      _tryConnect();
+    }
+  }
+
+  void _tryConnect() {
+    tryConnect = true;
+    print("_tryConnect");
+
+    WebSocket.connect(_SERVER_ADDRESS).then((ws) {
+      socket = ws;
+      socket?.listen(
+        _onReceptionOfMessageFromServer,
+        onDone: onDisconnected,
+        onError: (dynamic error) => onDisconnected(),
+      );
+      socket?.done.then((dynamic _) => onDisconnected());
+      lostConnection = false;
+      print("connected");
+      tryConnect = false;
+    }).catchError((onError) {
+      lostConnection = true;
+      print("catchError");
+      tryConnect = false;
+    });
+  }
+
+  getLostConnection() {
+    return lostConnection;
   }
 
   reset() {
@@ -71,10 +75,9 @@ class WebSocketsNotifications {
   }
 
   send(String message) {
-    if (_channel != null) {
-      if (_channel?.sink != null && isOn) {
-        _channel?.sink.add(message);
-      }
+    print("sending : " + message);
+    if (socket != null) {
+      socket?.add(message);
     }
   }
 
@@ -88,6 +91,7 @@ class WebSocketsNotifications {
 
   _onReceptionOfMessageFromServer(message) {
     isOn = true;
+    lostConnection = false;
     _listeners.forEach((Function callback) {
       callback(message);
     });

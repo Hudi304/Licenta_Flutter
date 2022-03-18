@@ -14,8 +14,10 @@ class LoginViewModel extends ChangeNotifier {
   LoginViewModel() {
     navigator = Injector.appInstance.get<AppNavigator>();
     game = Injector.appInstance.get<SocketCommunication>();
-    game.addListener(onDataReceieved);
+    // game.addListener(onDataReceieved);
     isOn = game.sockets.isOn;
+
+    game.setRefresh(() => refreshPage());
   }
 
   onLoginTapped() async {
@@ -30,6 +32,11 @@ class LoginViewModel extends ChangeNotifier {
 
   onDashTapped() {
     navigator.goToDashPage();
+  }
+
+  refreshPage() {
+    print("refresh");
+    notifyListeners();
   }
 
   onFuelTapped() {

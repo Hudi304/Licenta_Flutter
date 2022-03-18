@@ -21,7 +21,21 @@ class DashPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [Text("Dash Page")],
+        children: [
+          Text("Dash Page"),
+          Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                onPressed: () => viewModel.onToggleTapped(),
+                child: const Text("Toggle"),
+              )),
+          Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                onPressed: () => viewModel.onDash(),
+                child: const Text("Dash"),
+              )),
+        ],
       ),
     );
   }

@@ -20,7 +20,6 @@ class LoginPage extends StatelessWidget {
     });
   }
 
-
   _body(LoginViewModel viewModel) {
     return GridView.count(
       shrinkWrap: true,
@@ -30,7 +29,7 @@ class LoginPage extends StatelessWidget {
           width: 20.0,
           height: 20.0,
           decoration: BoxDecoration(
-            color: viewModel.isOn ? Colors.red : Colors.green,
+            color: viewModel.game.color,
             shape: BoxShape.circle,
           ),
         ),
