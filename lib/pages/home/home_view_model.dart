@@ -1,26 +1,59 @@
 import 'package:esp_socket/shared/app_navigator.dart';
+import 'package:esp_socket/shared/notifications/notification-manager.dart';
+import 'package:esp_socket/shared/notifications/notification-observer.dart';
+import 'package:esp_socket/socket/custom-socket-wrapper.dart';
 import 'package:esp_socket/socket/socket-communication.dart';
+import 'package:esp_socket/socket/socket-io-wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:injector/injector.dart';
 
-class LoginViewModel extends ChangeNotifier {
+class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
   late final AppNavigator navigator;
-  late final SocketCommunication game;
-  bool isOn = false;
 
+  // late final SocketIOWrapper socketWrapper;
+  // late final SocketCommunication game;
+  bool isOn = false;
+  late final CustomSocketWrapper customSocketWrapper;
   bool isWebSocketRunning = false;
   int retryLimit = 3;
 
-  LoginViewModel() {
-    navigator = Injector.appInstance.get<AppNavigator>();
-    game = Injector.appInstance.get<SocketCommunication>();
-    // game.addListener(onDataReceieved);
-    isOn = game.sockets.isOn;
+  late NotificationManager notificationManager;
 
-    game.setRefresh(() => refreshPage());
+  @override
+  late String id;
+
+  HomePageViewModel() {
+    navigator = Injector.appInstance.get<AppNavigator>();
+    id = "HomePageViewModel";
+    // game = Injector.appInstance.get<SocketCommunication>();
+    // game.addListener(onDataReceieved);
+    // isOn = game.sockets.isOn;
+    // socketWrapper = Injector.appInstance.get<SocketIOWrapper>();
+
+    notificationManager = Injector.appInstance<NotificationManager>();
+    notificationManager.subscribe(this);
+    customSocketWrapper = Injector.appInstance<CustomSocketWrapper>();
+    customSocketWrapper.addListener(() {
+      print("HomePageViewModel Listener");
+    });
+
+    customSocketWrapper.tryConnect();
+
+    addListener(() {
+      print("listener");
+    });
+
   }
 
-  onLoginTapped() async {
+  @override
+  void update() {
+    // TODO: implement update
+
+    print("HomePageViewModel : UPDATE :::");
+  }
+
+
+    onLoginTapped() async {
     try {
       navigator.goToDashPage();
     } catch (e) {
@@ -34,10 +67,6 @@ class LoginViewModel extends ChangeNotifier {
     navigator.goToDashPage();
   }
 
-  refreshPage() {
-    print("refresh");
-    notifyListeners();
-  }
 
   onFuelTapped() {
     navigator.goToFuelTablePage();
@@ -50,4 +79,5 @@ class LoginViewModel extends ChangeNotifier {
   onDataReceieved(String message) {
     print("HomePage : " + message);
   }
+
 }
