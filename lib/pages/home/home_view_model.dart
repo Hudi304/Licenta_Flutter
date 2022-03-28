@@ -22,6 +22,9 @@ class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
     navigator = Injector.appInstance.get<AppNavigator>();
     id = "HomePageViewModel";
     customSocketWrapper = Injector.appInstance.get<CustomSocketWrapper>();
+    // customSocketWrapper = CustomSocketWrapper.instance;
+    print("HomePageViewModel");
+    // customSocketWrapper.tryConnect();
     NotificationManager.instance.subscribe(this);
   }
 

@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
 _initInjection() {
   Injector injector = Injector.appInstance;
   injector.registerDependency<AppNavigator>(() => AppNavigator.instance);
-  injector.registerDependency<CustomSocketWrapper>(() => CustomSocketWrapper());
+  injector.registerDependency<CustomSocketWrapper>(() => CustomSocketWrapper.instance);
   injector.registerDependency<SocketIOWrapper>(() => SocketIOWrapper());
   injector.registerDependency<NotificationManager>(() => NotificationManager());
   // injector.registerDependency<SocketCommunication>(() => SocketCommunication());

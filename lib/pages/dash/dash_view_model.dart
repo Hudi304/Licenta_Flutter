@@ -13,6 +13,8 @@ class DashViewModel extends ChangeNotifier {
   DashViewModel() {
     navigator = Injector.appInstance.get<AppNavigator>();
     customSocketWrapper = Injector.appInstance.get<CustomSocketWrapper>();
+    // customSocketWrapper = CustomSocketWrapper.instance;
+
     // game = Injector.appInstance.get<SocketCommunication>();
     // game.send("dash");
   }
@@ -21,9 +23,9 @@ class DashViewModel extends ChangeNotifier {
 
   onToggleTapped() async {
     try {
-      // navigator.goToDashPage(userId);
+      print('toggle');
+
       customSocketWrapper.send("toggle");
-      // game.send("");
     } catch (e) {
       print('Error: $e');
       return null;

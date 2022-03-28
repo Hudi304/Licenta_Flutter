@@ -14,24 +14,16 @@ class CustomSocketWrapper {
   dynamic socketStatus;
   bool connecting = true;
 
-  CustomSocketWrapper() {
+  CustomSocketWrapper._() {
+    print("CONSTRUCTOR ");
     connectionEstablished = false;
-    tryConnect();
+    _tryConnect();
   }
 
   static CustomSocketWrapper get instance =>
-      _instance ??= CustomSocketWrapper();
+      _instance ??= CustomSocketWrapper._();
 
-  void onDisconnected() {
-    print("DISCONNECTED : ");
-    connectionEstablished = false;
-    socket = null;
-    connecting = true;
-    notifySubscribers(true);
-    tryConnect();
-  }
-
-  void tryConnect() {
+  void _tryConnect() {
     print("tryConnect");
     if ((socket == null || status != null) && connecting) {
       WebSocket.connect(_SERVER_ADDRESS).then((ws) {
@@ -41,22 +33,42 @@ class CustomSocketWrapper {
         status = socket?.closeCode;
         socket?.listen(
           onReceptionOfMessageFromServer,
-          onDone: onDisconnected,
-          onError: (dynamic error) => onDisconnected(),
+          onDone: onDone,
+          onError: (dynamic error) => onError(),
         );
-        socket?.done.then((dynamic _) => onDisconnected());
+        socket?.done.then((dynamic _) => onDone());
         connectionEstablished = true;
         notifySubscribers(true);
       }).catchError((onError) {
         print("connection attempt failed");
-        tryConnect();
+        _tryConnect();
       });
     } else {
       connecting = true;
     }
   }
 
+  void onDone() {
+    print("DISCONNECTED : ");
+    connectionEstablished = false;
+    socket = null;
+    connecting = true;
+    notifySubscribers(true);
+    _tryConnect();
+  }
+
+  void onError() {
+    print("ERROR : ");
+    connectionEstablished = false;
+    socket = null;
+    connecting = true;
+    notifySubscribers(true);
+    _tryConnect();
+  }
+
   void send(string) {
+    print("send");
+    print("" + (socket == null).toString());
     socket?.add("toggle");
   }
 
