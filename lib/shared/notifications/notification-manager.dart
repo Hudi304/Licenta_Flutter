@@ -3,11 +3,11 @@ import 'notification-observer.dart';
 class NotificationManager {
   static NotificationManager? _instance;
 
-  late List<NotificationObserver> _observers;
+  late List<NotificationObserver> observers;
   late bool _areAllNotificationsRead;
 
   NotificationManager() {
-    _observers = [];
+    observers = [];
     _areAllNotificationsRead = true;
   }
 
@@ -17,17 +17,17 @@ class NotificationManager {
   bool get areNotificationsRead => _areAllNotificationsRead;
 
   subscribe(NotificationObserver observer) {
-    _observers.add(observer);
+    observers.add(observer);
   }
 
   unsubscribe(NotificationObserver observer) {
-    _observers.removeWhere((e) => e.id == observer.id);
+    observers.removeWhere((e) => e.id == observer.id);
   }
 
   notifySubscribers(bool areNotificationRead) {
     _areAllNotificationsRead = areNotificationRead;
-    _observers.forEach((e) {
-      e.update();
+    observers.forEach((e) {
+      e.update(true);
     });
   }
 }

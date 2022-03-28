@@ -27,7 +27,8 @@ class HomePage extends StatelessWidget {
           height: 20.0,
           decoration: BoxDecoration(
             // color: viewModel.game.color,
-            color: Colors.red,
+            // color: Colors.red,
+            color: viewModel.dotColor,
             shape: BoxShape.circle,
           ),
         ),

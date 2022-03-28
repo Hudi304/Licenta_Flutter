@@ -1,4 +1,5 @@
 abstract class NotificationObserver {
   late String id;
-  void update();
+
+  void update(bool connectionEstablished);
 }

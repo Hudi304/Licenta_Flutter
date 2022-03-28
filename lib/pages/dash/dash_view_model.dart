@@ -1,14 +1,18 @@
 import 'package:esp_socket/shared/app_navigator.dart';
+import 'package:esp_socket/socket/custom-socket-wrapper.dart';
 import 'package:esp_socket/socket/socket-communication.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:injector/injector.dart';
 
 class DashViewModel extends ChangeNotifier {
   late final AppNavigator navigator;
+
   // late final SocketCommunication game;
+  late CustomSocketWrapper customSocketWrapper;
 
   DashViewModel() {
     navigator = Injector.appInstance.get<AppNavigator>();
+    customSocketWrapper = Injector.appInstance.get<CustomSocketWrapper>();
     // game = Injector.appInstance.get<SocketCommunication>();
     // game.send("dash");
   }
@@ -18,6 +22,7 @@ class DashViewModel extends ChangeNotifier {
   onToggleTapped() async {
     try {
       // navigator.goToDashPage(userId);
+      customSocketWrapper.send("toggle");
       // game.send("");
     } catch (e) {
       print('Error: $e');

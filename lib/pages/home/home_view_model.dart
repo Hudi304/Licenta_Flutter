@@ -2,58 +2,44 @@ import 'package:esp_socket/shared/app_navigator.dart';
 import 'package:esp_socket/shared/notifications/notification-manager.dart';
 import 'package:esp_socket/shared/notifications/notification-observer.dart';
 import 'package:esp_socket/socket/custom-socket-wrapper.dart';
-import 'package:esp_socket/socket/socket-communication.dart';
-import 'package:esp_socket/socket/socket-io-wrapper.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 
 class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
   late final AppNavigator navigator;
 
-  // late final SocketIOWrapper socketWrapper;
-  // late final SocketCommunication game;
   bool isOn = false;
+
   late final CustomSocketWrapper customSocketWrapper;
   bool isWebSocketRunning = false;
   int retryLimit = 3;
-
-  late NotificationManager notificationManager;
-
+  MaterialColor dotColor = Colors.red;
   @override
   late String id;
 
   HomePageViewModel() {
     navigator = Injector.appInstance.get<AppNavigator>();
     id = "HomePageViewModel";
-    // game = Injector.appInstance.get<SocketCommunication>();
-    // game.addListener(onDataReceieved);
-    // isOn = game.sockets.isOn;
-    // socketWrapper = Injector.appInstance.get<SocketIOWrapper>();
-
-    notificationManager = Injector.appInstance<NotificationManager>();
-    notificationManager.subscribe(this);
-    customSocketWrapper = Injector.appInstance<CustomSocketWrapper>();
-    customSocketWrapper.addListener(() {
-      print("HomePageViewModel Listener");
-    });
-
-    customSocketWrapper.tryConnect();
-
-    addListener(() {
-      print("listener");
-    });
-
+    customSocketWrapper = Injector.appInstance.get<CustomSocketWrapper>();
+    NotificationManager.instance.subscribe(this);
   }
 
   @override
-  void update() {
+  void update(bool connectionEstablished) {
     // TODO: implement update
-
-    print("HomePageViewModel : UPDATE :::");
+    print("HomePageViewModel : UPDATE :::" + connectionEstablished.toString());
+    if (connectionEstablished) {
+      print("green");
+      dotColor = Colors.green;
+    } else {
+      print("red");
+      dotColor = Colors.red;
+    }
+    notifyListeners();
   }
 
-
-    onLoginTapped() async {
+  onLoginTapped() async {
     try {
       navigator.goToDashPage();
     } catch (e) {
@@ -67,7 +53,6 @@ class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
     navigator.goToDashPage();
   }
 
-
   onFuelTapped() {
     navigator.goToFuelTablePage();
   }
@@ -79,5 +64,4 @@ class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
   onDataReceieved(String message) {
     print("HomePage : " + message);
   }
-
 }
