@@ -15,7 +15,7 @@ class CustomSocketWrapper {
   bool connecting = true;
 
   CustomSocketWrapper._() {
-    print("CONSTRUCTOR ");
+    print("CustomSocketWrapper : CONSTRUCTOR() ");
     connectionEstablished = false;
     _tryConnect();
   }
@@ -24,7 +24,7 @@ class CustomSocketWrapper {
       _instance ??= CustomSocketWrapper._();
 
   void _tryConnect() {
-    print("tryConnect");
+    print("CustomSocketWrapper : tryConnect()");
     if ((socket == null || status != null) && connecting) {
       WebSocket.connect(_SERVER_ADDRESS).then((ws) {
         connecting = false;
@@ -36,11 +36,12 @@ class CustomSocketWrapper {
           onDone: onDone,
           onError: (dynamic error) => onError(),
         );
+        //todo check if this is important
         socket?.done.then((dynamic _) => onDone());
         connectionEstablished = true;
         notifySubscribers(true);
       }).catchError((onError) {
-        print("connection attempt failed");
+        print("CustomSocketWrapper : connection attempt failed");
         _tryConnect();
       });
     } else {
@@ -49,7 +50,7 @@ class CustomSocketWrapper {
   }
 
   void onDone() {
-    print("DISCONNECTED : ");
+    print("CustomSocketWrapper : DISCONNECTED");
     connectionEstablished = false;
     socket = null;
     connecting = true;
@@ -58,7 +59,7 @@ class CustomSocketWrapper {
   }
 
   void onError() {
-    print("ERROR : ");
+    print("CustomSocketWrapper : ERROR");
     connectionEstablished = false;
     socket = null;
     connecting = true;
@@ -66,14 +67,18 @@ class CustomSocketWrapper {
     _tryConnect();
   }
 
-  void send(string) {
-    print("send");
-    print("" + (socket == null).toString());
-    socket?.add("toggle");
+  void send(String string) {
+    print("CustomSocketWrapper : send() : " + string);
+    socket?.add(string);
+  }
+
+  void sendUTF8(List<int> bytes) {
+    print("CustomSocketWrapper : sendUTF8() : " + bytes.toString());
+    socket?.addUtf8Text(bytes);
   }
 
   void onReceptionOfMessageFromServer(message) {
-    print("MESSAGE FROM SERVER : " + message);
+    print("CustomSocketWrapper : MESSAGE FROM SERVER : " + message);
   }
 
   notifySubscribers(bool areNotificationRead) {

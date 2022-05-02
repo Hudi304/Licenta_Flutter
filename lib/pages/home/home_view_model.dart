@@ -2,15 +2,12 @@ import 'package:esp_socket/shared/app_navigator.dart';
 import 'package:esp_socket/shared/notifications/notification-manager.dart';
 import 'package:esp_socket/shared/notifications/notification-observer.dart';
 import 'package:esp_socket/socket/custom-socket-wrapper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 
 class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
   late final AppNavigator navigator;
-
   bool isOn = false;
-
   late final CustomSocketWrapper customSocketWrapper;
   bool isWebSocketRunning = false;
   int retryLimit = 3;
@@ -19,11 +16,11 @@ class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
   late String id;
 
   HomePageViewModel() {
-    navigator = Injector.appInstance.get<AppNavigator>();
     id = "HomePageViewModel";
+    navigator = Injector.appInstance.get<AppNavigator>();
     customSocketWrapper = Injector.appInstance.get<CustomSocketWrapper>();
-    // customSocketWrapper = CustomSocketWrapper.instance;
-    print("HomePageViewModel");
+    print("HomePageViewModel : CONSTRUCTOR() ");
+
     // customSocketWrapper.tryConnect();
     NotificationManager.instance.subscribe(this);
   }
@@ -31,7 +28,8 @@ class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
   @override
   void update(bool connectionEstablished) {
     // TODO: implement update
-    print("HomePageViewModel : UPDATE :::" + connectionEstablished.toString());
+    print(
+        "HomePageViewModel : update() :::" + connectionEstablished.toString());
     if (connectionEstablished) {
       print("green");
       dotColor = Colors.green;

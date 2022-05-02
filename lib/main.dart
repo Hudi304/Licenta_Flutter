@@ -11,9 +11,6 @@ import 'package:esp_socket/shared/helpers/pallet.dart';
 import 'package:esp_socket/shared/helpers/string.dart';
 import 'package:esp_socket/shared/notifications/notification-manager.dart';
 import 'package:esp_socket/socket/custom-socket-wrapper.dart';
-import 'package:esp_socket/socket/socket-communication.dart';
-import 'package:esp_socket/socket/socket-io-wrapper.dart';
-import 'package:esp_socket/socket/socket-wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 
@@ -65,9 +62,7 @@ class MyApp extends StatelessWidget {
 _initInjection() {
   Injector injector = Injector.appInstance;
   injector.registerDependency<AppNavigator>(() => AppNavigator.instance);
-  injector.registerDependency<CustomSocketWrapper>(() => CustomSocketWrapper.instance);
-  injector.registerDependency<SocketIOWrapper>(() => SocketIOWrapper());
+  injector.registerDependency<CustomSocketWrapper>(
+      () => CustomSocketWrapper.instance);
   injector.registerDependency<NotificationManager>(() => NotificationManager());
-  // injector.registerDependency<SocketCommunication>(() => SocketCommunication());
-  // injector.registerDependency<WebSocketsNotifications>(() => WebSocketsNotifications());
 }

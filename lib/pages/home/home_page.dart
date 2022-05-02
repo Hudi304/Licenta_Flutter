@@ -7,6 +7,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("HomePage : build() ");
     return Consumer<HomePageViewModel>(builder: (context, viewModel, child) {
       return _body(viewModel);
     });
