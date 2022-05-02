@@ -2,6 +2,7 @@ import 'package:esp_socket/shared/app_navigator.dart';
 import 'package:esp_socket/shared/notifications/notification-manager.dart';
 import 'package:esp_socket/shared/notifications/notification-observer.dart';
 import 'package:esp_socket/socket/custom-socket-wrapper.dart';
+import 'package:esp_socket/socket/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 
@@ -26,11 +27,11 @@ class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
   }
 
   @override
-  void update(bool connectionEstablished) {
+  void update(SocketNotification notification) {
     // TODO: implement update
     print(
-        "HomePageViewModel : update() :::" + connectionEstablished.toString());
-    if (connectionEstablished) {
+        "HomePageViewModel : update() : " + notification.connectionEstablished.toString());
+    if (notification.connectionEstablished) {
       print("green");
       dotColor = Colors.green;
     } else {

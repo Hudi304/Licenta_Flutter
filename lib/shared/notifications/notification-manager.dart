@@ -1,3 +1,5 @@
+import 'package:esp_socket/socket/notification.dart';
+
 import 'notification-observer.dart';
 
 class NotificationManager {
@@ -24,10 +26,10 @@ class NotificationManager {
     observers.removeWhere((e) => e.id == observer.id);
   }
 
-  notifySubscribers(bool areNotificationRead) {
-    _areAllNotificationsRead = areNotificationRead;
+  notifySubscribers(SocketNotification notification) {
+    _areAllNotificationsRead = notification.connectionEstablished;
     observers.forEach((e) {
-      e.update(true);
+      e.update(notification);
     });
   }
 }

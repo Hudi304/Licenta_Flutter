@@ -27,6 +27,26 @@ class DashPage extends StatelessWidget {
       return widgetList;
     }
 
+    List<Widget> stringToWidgets() {
+      List<Widget> widgetList = [];
+      // widgetList.
+
+      print("-------------------------------" + viewModel.messages.toString());
+
+      viewModel.messages.forEach((msg) {
+        widgetList.add(Text(msg, style: const TextStyle(color: Colors.white)));
+      });
+
+      viewModel.scrollController.animateTo(
+        0.0,
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 300),
+      );
+
+      return List.from(widgetList.reversed);
+      // return widgetList;
+    }
+
     return Scaffold(
         appBar: AppBar(
             title: const Text(
@@ -61,8 +81,11 @@ class DashPage extends StatelessWidget {
                             Radius.circular(Dimensions.padding12))),
                     padding: const EdgeInsets.all(Dimensions.padding16),
                     child: ListView(
+                      reverse: true,
                       shrinkWrap: true,
-                      children: getMessages(),
+                      controller: viewModel.scrollController,
+                      // children: getMessages(),
+                      children: stringToWidgets(),
                     ),
                   )),
               Padding(

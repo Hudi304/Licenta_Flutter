@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:esp_socket/shared/notifications/notification-manager.dart';
+import 'package:esp_socket/socket/notification.dart';
 
 const String _SERVER_ADDRESS = 'ws://192.168.43.121:80/ws';
-const Duration pingInterval = Duration(milliseconds: 200);
+const Duration pingInterval = Duration(milliseconds: 500);
 
 class CustomSocketWrapper {
   static CustomSocketWrapper? _instance;
@@ -26,8 +27,9 @@ class CustomSocketWrapper {
   void _tryConnect() {
     print("CustomSocketWrapper : tryConnect()");
     if ((socket == null || status != null) && connecting) {
+      connecting = false;
       WebSocket.connect(_SERVER_ADDRESS).then((ws) {
-        connecting = false;
+        // connecting = false;
         socket = ws;
         socket?.pingInterval = pingInterval;
         status = socket?.closeCode;
@@ -39,8 +41,9 @@ class CustomSocketWrapper {
         //todo check if this is important
         socket?.done.then((dynamic _) => onDone());
         connectionEstablished = true;
-        notifySubscribers(true);
+        notifySubscribers(SocketNotification(true, ""));
       }).catchError((onError) {
+        connecting = true;
         print("CustomSocketWrapper : connection attempt failed");
         _tryConnect();
       });
@@ -54,7 +57,7 @@ class CustomSocketWrapper {
     connectionEstablished = false;
     socket = null;
     connecting = true;
-    notifySubscribers(true);
+    notifySubscribers(SocketNotification(connectionEstablished, ""));
     _tryConnect();
   }
 
@@ -63,7 +66,7 @@ class CustomSocketWrapper {
     connectionEstablished = false;
     socket = null;
     connecting = true;
-    notifySubscribers(true);
+    notifySubscribers(SocketNotification(connectionEstablished, ""));
     _tryConnect();
   }
 
@@ -79,11 +82,13 @@ class CustomSocketWrapper {
 
   void onReceptionOfMessageFromServer(message) {
     print("CustomSocketWrapper : MESSAGE FROM SERVER : " + message);
+
+    notifySubscribers(SocketNotification(connectionEstablished, message));
   }
 
-  notifySubscribers(bool areNotificationRead) {
+  notifySubscribers(SocketNotification notification) {
     NotificationManager.instance.observers.forEach((e) {
-      e.update(connectionEstablished);
+      e.update(notification);
     });
   }
 }
