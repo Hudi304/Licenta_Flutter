@@ -4,7 +4,6 @@ import 'notification-observer.dart';
 
 class NotificationManager {
   static NotificationManager? _instance;
-
   late List<NotificationObserver> observers;
   late bool _areAllNotificationsRead;
 

@@ -32,10 +32,10 @@ class HomePageViewModel extends ChangeNotifier implements NotificationObserver {
     print(
         "HomePageViewModel : update() : " + notification.connectionEstablished.toString());
     if (notification.connectionEstablished) {
-      print("green");
+      // print("green");
       dotColor = Colors.green;
     } else {
-      print("red");
+      // print("red");
       dotColor = Colors.red;
     }
     notifyListeners();

@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'package:esp_socket/shared/notifications/notification-manager.dart';
 import 'package:esp_socket/socket/notification.dart';
+import 'dart:typed_data';
 
-const String _SERVER_ADDRESS = 'ws://192.168.43.121:80/ws';
+const String _SERVER_ADDRESS = 'ws://192.168.43.246:80/ws';
 const Duration pingInterval = Duration(milliseconds: 500);
 
 class CustomSocketWrapper {
@@ -11,6 +12,7 @@ class CustomSocketWrapper {
   late bool connectionEstablished;
   WebSocket? socket;
   int? status;
+  int msgNo = 0;
   Timer? timer;
   dynamic socketStatus;
   bool connecting = true;
@@ -38,7 +40,6 @@ class CustomSocketWrapper {
           onDone: onDone,
           onError: (dynamic error) => onError(),
         );
-        //todo check if this is important
         socket?.done.then((dynamic _) => onDone());
         connectionEstablished = true;
         notifySubscribers(SocketNotification(true, ""));
@@ -67,7 +68,7 @@ class CustomSocketWrapper {
     socket = null;
     connecting = true;
     notifySubscribers(SocketNotification(connectionEstablished, ""));
-    _tryConnect();
+    // _tryConnect();
   }
 
   void send(String string) {
@@ -81,9 +82,30 @@ class CustomSocketWrapper {
   }
 
   void onReceptionOfMessageFromServer(message) {
-    print("CustomSocketWrapper : MESSAGE FROM SERVER : " + message);
 
-    notifySubscribers(SocketNotification(connectionEstablished, message));
+    Uint8List byteBuff =  message;
+
+      // print("CustomSocketWrapper : MESSAGE FROM SERVER : " + byteBuff.length.toString());
+      // print("CustomSocketWrapper : MESSAGE FROM SERVER : " + byteBuff.lengthInBytes.toString());
+
+     var iter = byteBuff.iterator;
+
+     String full = "";
+
+    full = "[" + msgNo.toString() + "]:";
+
+     while(iter.moveNext()){
+      // print( iter.current.toUnsigned(8).toString());
+      full = full + iter.current.toUnsigned(8).toString()+ "|";
+     }
+
+     print(full);
+
+    // print("CustomSocketWrapper : MESSAGE FROM SERVER : " + byteBuff.);
+
+
+      notifySubscribers(SocketNotification(connectionEstablished, full));
+    msgNo++;
   }
 
   notifySubscribers(SocketNotification notification) {

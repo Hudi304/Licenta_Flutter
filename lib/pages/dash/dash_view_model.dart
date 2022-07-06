@@ -35,16 +35,16 @@ class DashViewModel extends ChangeNotifier implements NotificationObserver {
   void update(SocketNotification notification) {
     print("DashViewModel : UPDATE ::: connectionEstablished=" + notification.connectionEstablished.toString());
       if (notification.connectionEstablished) {
-        print("green");
+        // print("green");
         dotColor = Colors.green;
       } else {
-        print("red");
+        // print("red");
         dotColor = Colors.red;
       }
 
       if(notification.msg !=  ""){
         messages.add(notification.msg);
-        print("DashViewModel : UPDATE ::: messages" + messages.toString());
+        // print("DashViewModel : UPDATE ::: messages" + messages.toString());
       }
       notifyListeners();
   }
@@ -59,6 +59,11 @@ class DashViewModel extends ChangeNotifier implements NotificationObserver {
       print('Error: $e');
       return null;
     } finally {}
+    notifyListeners();
+  }
+
+  onClear()  {
+    messages = [];
     notifyListeners();
   }
 

@@ -31,7 +31,7 @@ class DashPage extends StatelessWidget {
       List<Widget> widgetList = [];
       // widgetList.
 
-      print("-------------------------------" + viewModel.messages.toString());
+      // print("-------------------------------" + viewModel.messages.toString());
 
       viewModel.messages.forEach((msg) {
         widgetList.add(Text(msg, style: const TextStyle(color: Colors.white)));
@@ -95,6 +95,10 @@ class DashPage extends StatelessWidget {
                   )),
               ButtonBar(
                 children: [
+                  ElevatedButton(
+                    onPressed: () => viewModel.onClear(),
+                    child: const Text("Clear"),
+                  ),
                   ElevatedButton(
                     onPressed: () => viewModel.onToggleTapped(),
                     child: const Text("Toggle"),
