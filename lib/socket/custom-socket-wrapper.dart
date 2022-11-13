@@ -4,7 +4,9 @@ import 'package:esp_socket/shared/notifications/notification-manager.dart';
 import 'package:esp_socket/socket/notification.dart';
 import 'dart:typed_data';
 
-const String _SERVER_ADDRESS = 'ws://192.168.43.246:80/ws';
+// const String _SERVER_ADDRESS = 'ws://192.168.43.246:80/ws';
+const String _SERVER_ADDRESS = 'ws://192.168.0.130:80/ws';
+
 const Duration pingInterval = Duration(milliseconds: 500);
 
 class CustomSocketWrapper {
